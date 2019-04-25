@@ -106,7 +106,9 @@ BOOLEAN NPUnicodeStringToChar(PUNICODE_STRING UniName, char Name[]);
 
 BOOLEAN CheckProcessAccess(HANDLE hFile, CHAR pid_string[], CHAR object[], BOOLEAN read_request, BOOLEAN write_request);
 
-void itoa(int n, char s[]);
+VOID itoa(int n, char s[]);
+
+VOID tok_spaces(char** tok);
 
 //
 //  Assign text sections for each routine.
@@ -480,13 +482,13 @@ PtPostOperationCallback(
 	return FLT_POSTOP_FINISHED_PROCESSING;
 }
 
-VOID tokenize_spaces(PCHAR tok)
+VOID tok_spaces(char** tok)
 {
-	while (tok++)
+	while ((*tok)++)
 	{
-		if (*tok == ' ')
+		if (**tok == ' ')
 		{
-			*tok = '\0';
+			**tok = '\0';
 			break;
 		}
 	}
@@ -533,25 +535,12 @@ BOOLEAN CheckProcessAccess(HANDLE hFile, CHAR pid_string[], CHAR object[], BOOLE
 
 
 		pid = buf;
-		while (tok++)
-		{
-			if (*tok == ' ')
-			{
-				*tok = '\0';
-				break;
-			}
-		}
+
+		tok_spaces(&tok);
 
 		file_name = ++tok;
 
-		while (tok++)
-		{
-			if (*tok == ' ')
-			{
-				*tok = '\0';
-				break;
-			}
-		}
+		tok_spaces(&tok);
 
 		rights = ++tok;
 
@@ -668,7 +657,7 @@ void reverse(char s[])
 	}
 }
 
-void itoa(int n, char s[])
+VOID itoa(int n, char s[])
 {
 	int i, sign;
 
